@@ -1,11 +1,11 @@
 pragma solidity ^0.5.0;
 
 contract MerchItem {
-  Patron {
+  struct Patron {
     address patronAddress;
     uint256 numOfPurchasedItem;
     uint256 portionOfFunds;
-    bool hasDelivered = false;
+    bool hasDelivered;
   }
   string public nameOfItem;
   uint256 public costOfItem;
@@ -51,11 +51,11 @@ contract MerchItem {
   }
 
   function purchaseItem() public payable {
-    _checkPaymentAmount() 
-    _mappingPatronToList() 
-    _calculatePortionOfFunds()
-    _extendAuctionTimeLimit() 
-    _transferFundsToCompound() 
+    require(_checkPaymentAmount(), "fail");
+    require(_mappingPatronToList(), "fail");
+    require(_calculatePortionOfFunds(), "fail");
+    require(_extendAuctionTimeLimit(), "fail");
+    require(_transferFundsToCompound(), "fail");
   }
 
   // - allows patrons to request to delivery an item they bought in an auction to the seller/designer, only a patron who bought an item can invoke
@@ -76,31 +76,35 @@ contract MerchItem {
 
 
   // - checks who is in the patron list
-  function _hasPurchasedItem() internal {
-
+  function _hasPurchasedItem() internal pure returns(bool) {
+    return true;
   }
 
   // - checks if the payment amount is enough to buy an item  
-  function _checkPaymentAmount() internal {
-
+  function _checkPaymentAmount() internal pure returns(bool) {
+    return true;
   }
   
   // - adds a patron struct to patrons list(mapping)
-  function _mappingPatronToList() internal {
-
+  function _mappingPatronToList() internal pure returns(bool) {
+    return true;
+    
   }
 
-  function _calculatePortionOfFunds() internal {
+  function _calculatePortionOfFunds() internal pure returns(bool) {
+    return true;
 
   }
 
   // - extends an auction adding 24 hours to the time limit
-  function _extendAuctionTimeLimit() internal {
+  function _extendAuctionTimeLimit() internal pure returns(bool) {
+    return true;
 
   }
 
   // - deposits the funds collected from patrons to Compound to earn interest until the auction finishes
-  function _transferFundsToCompound() internal {
+  function _transferFundsToCompound() internal pure returns(bool) {
+    return true;
 
   }
 
