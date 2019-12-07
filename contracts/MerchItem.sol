@@ -13,7 +13,7 @@ contract MerchItem {
   string public nameOfItem;
   uint256 public costOfItem;
   uint256 public maximumAdditionalPrice;
-  uint256 public rateOfPricingDecline;
+  uint256 public rateOfPricingDecline; // accepts from 1 to 10, and divide it by 10 when calculating priceOfItem
   uint256 public totalSupplyOfItem;
   uint256 public priceOfItem;
   uint256 public totalAmountOfItemSold; // total amount of funds collected from patrons
@@ -21,12 +21,20 @@ contract MerchItem {
   mapping(address => Patron) public patrons;
 
   // constructor() public {
-  constructor(string memory newItemName, uint256 newItemCost, uint256 newItemTotalSupply) public {
+  constructor(
+    string memory newItemName,
+    uint256 newItemCost,
+    uint256 newItemTotalSupply,
+    uint256 newMaximumAdditionalPrice,
+    uint256 newRateOfPricingDecline
+    ) public {
     nameOfItem = newItemName;
     costOfItem = newItemCost;
     totalSupplyOfItem = newItemTotalSupply;
+    maximumAdditionalPrice = newMaximumAdditionalPrice;
+    rateOfPricingDecline = newRateOfPricingDecline;
     totalAmountOfItemSold = 0;
-    priceOfItem = (maximumAdditionalPrice.mul(2).div((rateOfPricingDecline.mul(totalAmountOfItemSold).add(2)))).add(costOfItem);
+    priceOfItem = (maximumAdditionalPrice.mul(2).div((rateOfPricingDecline.div(10).mul(totalAmountOfItemSold).add(2)))).add(costOfItem);
     auctionLimit = 1 weeks;
   }
 
