@@ -14,10 +14,12 @@ contract MerchItem {
   uint256 public auctionLimit;
   mapping(address => Patron) public patrons;
 
+  // constructor() public {
   constructor(string memory newItemName, uint256 newItemCost, uint256 newItemTotalSupply) public {
     nameOfItem = newItemName;
     costOfItem = newItemCost;
     totalSupplyOfItem = newItemTotalSupply;
+
     totalAmountOfItemSold = 0;
     auctionLimit = 1 weeks;
   }
