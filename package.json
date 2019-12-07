@@ -1,0 +1,26 @@
+{
+  "name": "SwagDao",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KeisakuHiga/SwagDAOSmartContract.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KeisakuHiga/SwagDAOSmartContract/issues"
+  },
+  "homepage": "https://github.com/KeisakuHiga/SwagDAOSmartContract#readme",
+  "dependencies": {
+    "openzeppelin-solidity": "^2.4.0"
+  }
+}
