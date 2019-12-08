@@ -1,4 +1,5 @@
 const MerchItem = artifacts.require("./MerchItem.sol");
+const InternalFunc = artifacts.require("./TestForInternalFunc.sol");
 
 contract("MerchItem", accounts => {
 
@@ -28,8 +29,9 @@ contract("MerchItem", accounts => {
     assert.equal(itemPrice, 20, "The price of item does not match with the expected value.");
   });
 
-  it("'_checkPaymentAmount()' should return true", async () => {
-    const result = await merchItemInstance.purchaseItem.call({ from: accounts[0] });
+  it("_checkPaymentAmount() should return true", async () => {
+    const result = await merchItemInstance.checkPaymentAmount.call();
+    
     assert.equal(result, true, "fail");
   });
 });

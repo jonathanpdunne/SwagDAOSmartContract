@@ -1,8 +1,12 @@
 pragma solidity ^0.5.0;
+
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./IDai.sol";
 
 contract MerchItem {
   using SafeMath for uint256;
+
+  IDai public DAIContract;
 
   struct Patron {
     address patronAddress;
@@ -10,10 +14,13 @@ contract MerchItem {
     uint256 portionOfFunds;
     bool hasDelivered;
   }
+
+  address public admin;
+
   string public nameOfItem;
   uint256 public costOfItem;
   uint256 public maximumAdditionalPrice;
-  uint256 public rateOfPricingDecline; // accepts from 1 to 10, and divide it by 10 when calculating priceOfItem
+  uint256 public rateOfPricingDecline; // accepts from 1 to 20, and divide it by 10 when calculating priceOfItem
   uint256 public totalSupplyOfItem;
   uint256 public priceOfItem;
   uint256 public totalAmountOfItemSold; // total amount of funds collected from patrons
@@ -26,7 +33,8 @@ contract MerchItem {
     uint256 newItemCost,
     uint256 newItemTotalSupply,
     uint256 newMaximumAdditionalPrice,
-    uint256 newRateOfPricingDecline
+    uint256 newRateOfPricingDecline,
+    address daiAddress
     ) public {
     nameOfItem = newItemName;
     costOfItem = newItemCost;
@@ -36,9 +44,12 @@ contract MerchItem {
     totalAmountOfItemSold = 0;
     priceOfItem = (maximumAdditionalPrice.mul(2).div((rateOfPricingDecline.div(10).mul(totalAmountOfItemSold).add(2)))).add(costOfItem);
     auctionLimit = 1 weeks;
+
+    admin = msg.sender;
+    DAIContract = IDai(daiAddress);
   }
 
-  function purchaseItem() public payable returns (bool) {
+  function purchaseItem(uint256 numOfItem) public payable returns (bool) {
     require(_checkPaymentAmount(), "fail");
     require(_mappingPatronToList(), "fail");
     require(_calculatePortionOfFunds(), "fail");
@@ -98,6 +109,7 @@ contract MerchItem {
 
   // - checks if the payment amount is enough to buy an item  
   function _checkPaymentAmount() internal pure returns(bool) {
+
     return true;
   }
   
