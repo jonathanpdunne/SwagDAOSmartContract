@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/KeisakuHiga/SwagDAOSmartContract#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "openzeppelin-solidity": "^2.4.0"
   }
 }

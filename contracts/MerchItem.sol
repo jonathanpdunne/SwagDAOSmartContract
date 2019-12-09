@@ -1,12 +1,13 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./IDai.sol";
+// import "./IDai.sol";
+import "./Dai.sol";
 
 contract MerchItem {
   using SafeMath for uint256;
 
-  IDai public DAIContract;
+  Dai public DAIContract;
 
   struct Patron {
     address patronAddress;
@@ -46,11 +47,11 @@ contract MerchItem {
     auctionLimit = 1 weeks;
 
     admin = msg.sender;
-    DAIContract = IDai(daiAddress);
+    DAIContract = Dai(daiAddress);
   }
 
-  function purchaseItem(uint256 numOfItem) public payable returns (bool) {
-    require(_checkPaymentAmount(), "fail");
+  function purchaseItem(uint256 numOfItem, uint256 daiPayment) public returns (bool) {
+    require(_checkPaymentAmount(daiPayment), "fail");
     require(_mappingPatronToList(), "fail");
     require(_calculatePortionOfFunds(), "fail");
     require(_extendAuctionTimeLimit(), "fail");
@@ -108,8 +109,16 @@ contract MerchItem {
   }
 
   // - checks if the payment amount is enough to buy an item  
-  function _checkPaymentAmount() internal pure returns(bool) {
+  function _checkPaymentAmount(uint256 daiPayment) internal view returns (bool) {
+    // check if the user's DAI balance is greater than the payment amount
+    require(DAIContract.balanceOf(msg.sender) >= daiPayment, "insufficient funds");
 
+    // get the current item price and check if the purchaser's DAI balance is sufficient (one item vs purchaser balance)
+
+    // if an user want to buy more than two items,
+    // you should calculate the item price after the current purhcasing(loop until the purchasing finish)
+
+    // create a new Patron struct and push it to patrons(mapping)
     return true;
   }
   

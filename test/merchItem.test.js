@@ -1,20 +1,26 @@
 const MerchItem = artifacts.require("./MerchItem.sol");
+const Dai = artifacts.require("./Dai.sol");
 const InternalFunc = artifacts.require("./TestForInternalFunc.sol");
 
 contract("MerchItem", accounts => {
-
   beforeEach(async () => {
+    const DaiInstance = await Dai.new();
+    const daiAddress = await DaiInstance.address;
+    console.log(daiAddress)
+
     const newItemName = "test";
     const newItemCost = 10;
     const newItemTotalSupply = 100;
     const newMaximumAdditionalPrice = 10;
     const newRateOfPricingDecline = 5;
+
     merchItemInstance = await MerchItem.new(
       newItemName,
       newItemCost,
       newItemTotalSupply,
       newMaximumAdditionalPrice,
-      newRateOfPricingDecline
+      newRateOfPricingDecline,
+      daiAddress
       );
   });
 
