@@ -1,7 +1,13 @@
-var SimpleStorage = artifacts.require("./SimpleStorage.sol");
 var MerchItem = artifacts.require("./MerchItem.sol");
+var LibNote = artifacts.require("./LibNote.sol");
+var Dai = artifacts.require("./Dai.sol");
 
-module.exports = function(deployer) {
-  // deployer.deploy(MerchItem);
-  deployer.deploy(MerchItem, "test", 10, 100, 10, 5);
+// const daiAddress = '0x6B175474E8/9094C44Da98b954EedeAC495271d0F';
+
+module.exports = function(deployer, accounts) {
+  deployer.deploy(LibNote);
+  deployer.deploy(Dai)
+    .then(function() {
+      return deployer.deploy(MerchItem, "test", 10, 30, 10, 10, Dai.address);
+    })
 };
