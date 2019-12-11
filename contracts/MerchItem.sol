@@ -1,13 +1,14 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./Token.sol";
 // import "./IDai.sol";
-// import "./Dai.sol";
 
 contract MerchItem {
   using SafeMath for uint256;
 
-  // Dai public DAIContract;
+  Token public token;
+  // IDai dai;
 
   struct Patron {
     address patronAddress;
@@ -34,7 +35,8 @@ contract MerchItem {
     uint256 newItemCost,
     uint256 newItemTotalSupply,
     uint256 newMaximumAdditionalPrice,
-    uint256 newRateOfPricingDecline
+    uint256 newRateOfPricingDecline,
+    address tokenAddress
     ) public {
     nameOfItem = newItemName;
     costOfItem = newItemCost;
@@ -46,15 +48,18 @@ contract MerchItem {
     auctionLimit = 1 weeks;
 
     admin = msg.sender;
+    // Token will be replaced with Dai contract when testing on test networks/mainnet
     // DAIContract = Dai(daiAddress);
+    token = Token(tokenAddress);
   }
 
-  function purchaseItem() public pure returns (bool) {
+  function purchaseItem() public view returns (bool) {
+    // return _checkPaymentAmount();
     require(_checkPaymentAmount(), "fail");
-    require(_mappingPatronToList(), "fail");
-    require(_calculatePortionOfFunds(), "fail");
-    require(_extendAuctionTimeLimit(), "fail");
-    require(_transferFundsToCompound(), "fail");
+    // require(_mappingPatronToList(), "fail");
+    // require(_calculatePortionOfFunds(), "fail");
+    // require(_extendAuctionTimeLimit(), "fail");
+    // require(_transferFundsToCompound(), "fail");
     return true;
   }
 
@@ -108,9 +113,10 @@ contract MerchItem {
   }
 
   // - checks if the payment amount is enough to buy an item  
-  function _checkPaymentAmount() internal pure returns (bool) {
+  function _checkPaymentAmount() public view returns (bool) {
     // check if the user's DAI balance is greater than the payment amount
-    // require(Token.balanceOf(msg.sender) >= daiPayment, "insufficient funds");
+    require(token.balanceOf(msg.sender) >= costOfItem, "insufficient funds");
+    // return token.balanceOf(msg.sender);
 
     // get the current item price and check if the purchaser's DAI balance is sufficient (one item vs purchaser balance)
 
