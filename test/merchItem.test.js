@@ -23,10 +23,10 @@ before(async () => {
   contract("MerchItem", accounts => {
     
     it("should deploy a MerchItem instance with passed arguments", async () => {
-      const admin = await merchItem.admin.call();
-      const deployerAddress = accounts[0];
-      
-      const itemName = await merchItem.nameOfItem.call();
+    const admin = await merchItem.admin.call();
+    const deployerAddress = accounts[0];
+    
+    const itemName = await merchItem.nameOfItem.call();
     const itemCost = await merchItem.costOfItem.call();
     const itemSupply = await merchItem.totalSupplyOfItem.call();
     const itemPrice = await merchItem.priceOfItem.call();
