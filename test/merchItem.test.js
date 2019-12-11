@@ -14,7 +14,8 @@ before(async () => {
     newItemCost,
     newItemTotalSupply,
     newMaximumAdditionalPrice,
-    newRateOfPricingDecline
+    newRateOfPricingDecline,
+    token.address
     );
     
     // console.log(merchItem)
@@ -24,22 +25,22 @@ contract("MerchItem", accounts => {
   beforeEach(async () => {
     admin = accounts[0];
     user1 = accounts[1];
-    user1 = accounts[2];
+    user2 = accounts[2];
   });
   it("admin has 10 tokens and user1 has 0 tokens", async () => {
     await token.mint(admin, 100);
-    let balanceOne = await token.balanceOf(admin);
-    let balanceTwo = await token.balanceOf(user1);
-    // console.log(balanceOne)
-    assert.equal(balanceOne, 100, 'the balance is not 10 tokens')
-    assert.equal(balanceTwo, 0, 'the balance is not 0 tokens')
+    let balanceOfAdmin = await token.balanceOf(admin);
+    let balanceOfUser1 = await token.balanceOf(user1);
+    // console.log(balanceOfAdmin)
+    assert.equal(balanceOfAdmin, 100, 'the balance is not 10 tokens')
+    assert.equal(balanceOfUser1, 0, 'the balance is not 0 tokens')
   });
   it("admin and user1 has 5 tokens after transferring 5 tokens from admin", async () => {
-    await token.transfer(accounts[2], 30);
-    balanceOne = await token.balanceOf(admin);
-    balanceTwo = await token.balanceOf(user1);
-    assert.equal(balanceOne, 70, 'the balance is not 5 tokens')
-    assert.equal(balanceTwo, 30, 'the balance is not 5 tokens')
+    await token.transfer(user1, 30);
+    balanceOfAdmin = await token.balanceOf(admin);
+    balanceOfUser1 = await token.balanceOf(user1);
+    assert.equal(balanceOfAdmin, 70, 'the balance is not 5 tokens')
+    assert.equal(balanceOfUser1, 30, 'the balance is not 5 tokens')
   });
   it("should deploy a MerchItem instance with passed arguments", async () => {
     const admin = await merchItem.admin.call();
@@ -56,9 +57,10 @@ contract("MerchItem", accounts => {
     assert.equal(itemSupply, 30, "The number of item supply does not match with the expected value.");
     assert.equal(itemPrice, 20, "The price of item does not match with the expected value.");
   });
-  it("_checkPaymentAmount() should return true", async () => {
-    balanceOne = await token.balanceOf(admin);
-
+  it("purchaseItem() should return true", async () => {
+    // const result = await merchItem.purchaseItem.call({ from: user1 })
+    const result = await merchItem.purchaseItem.call({ from: user1 })
+    // console.log(result)
+    assert.equal(result, 30, "user1 does not have sufficient funds")
   });
-
 });
