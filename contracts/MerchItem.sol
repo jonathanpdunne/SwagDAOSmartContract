@@ -49,8 +49,8 @@ contract MerchItem {
     // DAIContract = Dai(daiAddress);
   }
 
-  function purchaseItem(uint256 numOfItem, uint256 daiPayment) public returns (bool) {
-    require(_checkPaymentAmount(daiPayment), "fail");
+  function purchaseItem() public pure returns (bool) {
+    require(_checkPaymentAmount(), "fail");
     require(_mappingPatronToList(), "fail");
     require(_calculatePortionOfFunds(), "fail");
     require(_extendAuctionTimeLimit(), "fail");
@@ -64,7 +64,7 @@ contract MerchItem {
   distributes funds in this contract receiving from patrons
   to them, 50% of product sale
    */
-  function distributeFundsToPatrons() public {
+  function distributeFundsToPatrons() public pure {
 
   }
 
@@ -74,24 +74,24 @@ contract MerchItem {
   claim the total sold amount in the auction, this function needs hasDelivered to be
   true, only creators/artists can invoke, 40% of product sale
    */
-  function claimTotalSellingValue() public {
+  function claimTotalSellingValue() public pure {
 
   }
 
   /**
   pays 10% of product sale to Operations
    */
-  function payOperationalCost() public {
+  function payOperationalCost() public pure {
 
   }
 
   // - allows patrons to request to delivery an item they bought in an auction to the seller/designer, only a patron who bought an item can invoke
-  function deliveryRequest() public {
+  function deliveryRequest() public pure {
 
   }
 
   // - updates the state of hasDelivered to true, only a patron who bought an item can invoke
-  function receivedItem() public {
+  function receivedItem() public pure {
 
   }
 
@@ -108,7 +108,7 @@ contract MerchItem {
   }
 
   // - checks if the payment amount is enough to buy an item  
-  function _checkPaymentAmount(uint256 daiPayment) internal view returns (bool) {
+  function _checkPaymentAmount() internal pure returns (bool) {
     // check if the user's DAI balance is greater than the payment amount
     // require(Token.balanceOf(msg.sender) >= daiPayment, "insufficient funds");
 

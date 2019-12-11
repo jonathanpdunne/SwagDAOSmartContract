@@ -4,7 +4,7 @@ const Token = artifacts.require("./Token.sol");
 contract("MerchItem", accounts => {
   beforeEach(async () => {
     const token = await Token.new();
-    console.log(token)
+    console.log(token.methods.name())
 
     const newItemName = "test";
     const newItemCost = 10;
@@ -20,7 +20,7 @@ contract("MerchItem", accounts => {
       newRateOfPricingDecline
       );
 
-      console.log(merchItem)
+      // console.log(merchItem)
   });
 
   it("should deploy a MerchItem instance with passed arguments", async () => {
@@ -30,7 +30,7 @@ contract("MerchItem", accounts => {
     const itemPrice = await merchItem.priceOfItem.call();
     assert.equal(itemName, "test", "The name does not match with the expected value.");
     assert.equal(itemCost, 10, "The itme cost does not match with the expected value.");
-    assert.equal(itemSupply, 100, "The number of item supply does not match with the expected value.");
+    assert.equal(itemSupply, 30, "The number of item supply does not match with the expected value.");
     assert.equal(itemPrice, 20, "The price of item does not match with the expected value.");
   });
 
