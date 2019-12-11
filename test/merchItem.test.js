@@ -1,3 +1,4 @@
+const truffleAssert = require('truffle-assertions');
 const MerchItem = artifacts.require("./MerchItem.sol");
 const Token = artifacts.require("./Token.sol");
 
@@ -57,10 +58,12 @@ contract("MerchItem", accounts => {
     assert.equal(itemSupply, 30, "The number of item supply does not match with the expected value.");
     assert.equal(itemPrice, 20, "The price of item does not match with the expected value.");
   });
-  it("purchaseItem() should return true", async () => {
-    // const result = await merchItem.purchaseItem.call({ from: user1 })
+  it("purchaseItem() should return true when a user has sufficient funds", async () => {
     const result = await merchItem.purchaseItem.call({ from: user1 })
-    // console.log(result)
-    assert.equal(result, 30, "user1 does not have sufficient funds")
+    assert.ok(result, "user1 does not have sufficient funds")
+  });
+  it("purchaseItem() should return false when a user does not have sufficient funds", async () => {
+    token.transfer(admin, 30, { from: user1 })
+    await truffleAssert.reverts(merchItem.purchaseItem.call({ from: user1 }), "insufficient funds");
   });
 });

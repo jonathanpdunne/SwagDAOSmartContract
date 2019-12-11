@@ -2,11 +2,13 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Token.sol";
+// import "./IDai.sol";
 
 contract MerchItem {
   using SafeMath for uint256;
 
   Token public token;
+  // IDai dai;
 
   struct Patron {
     address patronAddress;
@@ -51,14 +53,14 @@ contract MerchItem {
     token = Token(tokenAddress);
   }
 
-  function purchaseItem() public view returns (uint256) {
-    return _checkPaymentAmount();
-    // require(_checkPaymentAmount(), "fail");
+  function purchaseItem() public view returns (bool) {
+    // return _checkPaymentAmount();
+    require(_checkPaymentAmount(), "fail");
     // require(_mappingPatronToList(), "fail");
     // require(_calculatePortionOfFunds(), "fail");
     // require(_extendAuctionTimeLimit(), "fail");
     // require(_transferFundsToCompound(), "fail");
-    // return true;
+    return true;
   }
 
   // Function to send/withdraw funds to a particular address
@@ -111,10 +113,10 @@ contract MerchItem {
   }
 
   // - checks if the payment amount is enough to buy an item  
-  function _checkPaymentAmount() public view returns (uint256) {
+  function _checkPaymentAmount() public view returns (bool) {
     // check if the user's DAI balance is greater than the payment amount
-    // require(token.balanceOf(msg.sender) >= costOfItem, "insufficient funds");
-    return token.balanceOf(msg.sender);
+    require(token.balanceOf(msg.sender) >= costOfItem, "insufficient funds");
+    // return token.balanceOf(msg.sender);
 
     // get the current item price and check if the purchaser's DAI balance is sufficient (one item vs purchaser balance)
 
@@ -122,7 +124,7 @@ contract MerchItem {
     // you should calculate the item price after the current purhcasing(loop until the purchasing finish)
 
     // create a new Patron struct and push it to patrons(mapping)
-    // return true;
+    return true;
   }
   
   // - adds a patron struct to patrons list(mapping)

@@ -2,7 +2,7 @@ var MerchItem = artifacts.require("./MerchItem.sol");
 var Token = artifacts.require("./Token.sol");
 
 // const daiAddress = '0x6B175474E8/9094C44Da98b954EedeAC495271d0F';
-// const tokenAddress = '0x71574A53ed6a2d256f158407F198448c25b3E597';
+// the 6th argument of MerchItem, Token.address, will be replaced with daiAddress
 
 module.exports = function(deployer, accounts) {
 	deployer.deploy(Token)
