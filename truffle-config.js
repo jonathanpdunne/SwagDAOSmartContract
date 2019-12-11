@@ -20,12 +20,12 @@ module.exports = {
       },
       network_id: '*',
     },
-    rinkeby: {
-      provider: function() { 
-        return new HDWalletProvider(process.env.MNEMONIC, `https://rinkeby.infura.io/v3/${process.env.RINKEBY_API}`);
-      },
-      network_id: 4
-    },
+    // rinkeby: {
+    //   provider: function() { 
+    //     return new HDWalletProvider(process.env.MNEMONIC, `https://rinkeby.infura.io/v3/${process.env.RINKEBY_API}`);
+    //   },
+    //   network_id: 4
+    // },
     // ropsten: {
     //   provider: function() {
     //     return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/YOUR-PROJECT-ID");
