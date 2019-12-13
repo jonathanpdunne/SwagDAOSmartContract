@@ -20,9 +20,10 @@ contract MerchItem {
   address public admin;
 
   string public nameOfItem;
+  uint256 public itemNumber;
   uint256 public costOfItem;
-  uint256 public maximumAdditionalPrice;
-  uint256 public rateOfPricingDecline; // accepts from 1 to 20, and divide it by 10 when calculating priceOfItem
+  uint256 public startPrice;
+  uint256 public rateOfPricingDecline;
   uint256 public totalSupplyOfItem;
   uint256 public priceOfItem;
   uint256 public totalAmountOfItemSold; // total amount of funds collected from patrons
@@ -34,17 +35,18 @@ contract MerchItem {
     string memory newItemName,
     uint256 newItemCost,
     uint256 newItemTotalSupply,
-    uint256 newMaximumAdditionalPrice,
+    uint256 newStartPrice,
     uint256 newRateOfPricingDecline,
     address tokenAddress
     ) public {
     nameOfItem = newItemName;
+    itemNumber = 1;
     costOfItem = newItemCost;
     totalSupplyOfItem = newItemTotalSupply;
-    maximumAdditionalPrice = newMaximumAdditionalPrice;
+    startPrice = newStartPrice;
     rateOfPricingDecline = newRateOfPricingDecline;
     totalAmountOfItemSold = 0;
-    priceOfItem = (maximumAdditionalPrice.mul(2).div((rateOfPricingDecline.div(10).mul(totalAmountOfItemSold).add(2)))).add(costOfItem);
+    priceOfItem = _calculatePriceOfItem(itemNumber);
     auctionLimit = 1 weeks;
 
     admin = msg.sender;
@@ -53,14 +55,13 @@ contract MerchItem {
     token = Token(tokenAddress);
   }
 
-  function purchaseItem() public view returns (bool) {
-    // return _checkPaymentAmount();
-    require(_checkPaymentAmount(), "fail");
+  function purchaseItem(uint256 numOfItem) public view returns (uint256) {
+    // require(_checkPaymentAbility(), "user does not have sufficient funds");
     // require(_mappingPatronToList(), "fail");
     // require(_calculatePortionOfFunds(), "fail");
     // require(_extendAuctionTimeLimit(), "fail");
     // require(_transferFundsToCompound(), "fail");
-    return true;
+    // return true;
   }
 
   // Function to send/withdraw funds to a particular address
@@ -112,23 +113,38 @@ contract MerchItem {
     return true;
   }
 
+  function _checkPaymentAbility(uint256 numOfItem) public returns (bool) {
+    uint256 subTotal = 0;
+    uint256 totalPayment = 0;
+
+    for(uint256 i = 0; i < numOfItem; i++) {
+      subTotal = _calculatePriceOfItem(itemNumber.add(i));
+      totalPayment = totalPayment.add(subTotal);
+    }
+
+    if (_userHasEnoughFunds(totalPayment)) {
+      itemNumber = itemNumber.add(numOfItem);
+      totalAmountOfItemSold = totalAmountOfItemSold.add(totalPayment);
+      return true;
+    }
+    return false;
+  }
+
+  function _calculatePriceOfItem(uint256 itemNum) public returns (uint256) {
+    return startPrice.sub(costOfItem).mul(2).div((rateOfPricingDecline.div(10).mul(itemNum.sub(1)).add(2))).add(costOfItem);
+  }
+  
   // - checks if the payment amount is enough to buy an item  
-  function _checkPaymentAmount() public view returns (bool) {
+  function _userHasEnoughFunds(uint256 totalPayment) public returns (bool) {
     // check if the user's DAI balance is greater than the payment amount
-    require(token.balanceOf(msg.sender) >= costOfItem, "insufficient funds");
-    // return token.balanceOf(msg.sender);
+    require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
 
-    // get the current item price and check if the purchaser's DAI balance is sufficient (one item vs purchaser balance)
-
-    // if an user want to buy more than two items,
-    // you should calculate the item price after the current purhcasing(loop until the purchasing finish)
-
-    // create a new Patron struct and push it to patrons(mapping)
     return true;
   }
   
   // - adds a patron struct to patrons list(mapping)
   function _mappingPatronToList() internal pure returns(bool) {
+    // create a new Patron struct and push it to patrons(mapping)
     return true;
     
   }
