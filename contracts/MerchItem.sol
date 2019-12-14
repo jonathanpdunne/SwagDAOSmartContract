@@ -23,20 +23,19 @@ contract MerchItem {
   uint256 public itemNumber;
   uint256 public costOfItem;
   uint256 public startPrice;
-  uint256 public rateOfPricingDecline;
+  uint256 public rateOfDecline;
   uint256 public totalSupplyOfItem;
   uint256 public priceOfItem;
   uint256 public totalAmountOfItemSold; // total amount of funds collected from patrons
   uint256 public auctionLimit;
   mapping(address => Patron) public patrons;
 
-  // constructor() public {
   constructor(
     string memory newItemName,
     uint256 newItemCost,
     uint256 newItemTotalSupply,
     uint256 newStartPrice,
-    uint256 newRateOfPricingDecline,
+    uint256 newRateOfDecline,
     address tokenAddress
     ) public {
     nameOfItem = newItemName;
@@ -44,9 +43,10 @@ contract MerchItem {
     costOfItem = newItemCost;
     totalSupplyOfItem = newItemTotalSupply;
     startPrice = newStartPrice;
-    rateOfPricingDecline = newRateOfPricingDecline;
+    rateOfDecline = newRateOfDecline;
     totalAmountOfItemSold = 0;
     priceOfItem = _calculatePriceOfItem(itemNumber);
+
     auctionLimit = 1 weeks;
 
     admin = msg.sender;
@@ -125,13 +125,17 @@ contract MerchItem {
     if (_userHasEnoughFunds(totalPayment)) {
       itemNumber = itemNumber.add(numOfItem);
       totalAmountOfItemSold = totalAmountOfItemSold.add(totalPayment);
+      priceOfItem = _calculatePriceOfItem(itemNumber);
       return true;
     }
     return false;
   }
 
   function _calculatePriceOfItem(uint256 itemNum) public returns (uint256) {
-    return startPrice.sub(costOfItem).mul(2).div((rateOfPricingDecline.div(10).mul(itemNum.sub(1)).add(2))).add(costOfItem);
+    uint256 upper = (startPrice.sub(costOfItem)).mul(2);
+    uint256 under = (rateOfDecline.mul(itemNum.sub(1))).add(2);
+    uint256 result = (upper.div(under)).add(costOfItem);
+    return result;
   }
   
   // - checks if the payment amount is enough to buy an item  
