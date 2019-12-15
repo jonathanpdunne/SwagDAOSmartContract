@@ -29,7 +29,7 @@ contract("MerchItem", accounts => {
     user1 = accounts[1];
     user2 = accounts[2];
 
-    mintAmount = web3.utils.toWei('100.00', 'ether')// * oneDAI;
+    mintAmount = web3.utils.toWei('1000.00', 'ether')// * oneDAI;
     await token.mint(admin, mintAmount);
 
     balanceOfAdmin = await token.balanceOf(admin);
@@ -73,28 +73,17 @@ contract("MerchItem", accounts => {
     assert.equal(priceOfItem, web3.utils.toWei('50.00', 'ether'), "The price of item does not match with the expected value.");
     assert.equal(rateOfDecline, web3.utils.toWei('0.50', 'ether'), "The rate of decline does not match with the expected value.");
   });
-  it("_calculatePriceOfItem", async () => {
-    const itemNum = 2
-    await merchItem._calculatePriceOfItem(itemNum, { from: admin })
-    const priceOfItem = await merchItem.priceOfItem.call()
-    assert.equal(priceOfItem, web3.utils.toWei('50.00', 'ether'), "the calculation for price of item failed");
-  });
 
   it("_checkPaymentAbility() should return true when a user has a payment ability for a purchase", async () => {
-    let numOfItem = 1;
+    let numOfItem = 3;
     let result = await merchItem._checkPaymentAbility(numOfItem, { from: admin });
-    assert.ok(result, "the user does not have sufficient tokens")
+    assert.ok(result, "#1 the user does not have sufficient tokens")
     
     let priceOfItem = await merchItem.priceOfItem.call();
-    console.log(priceOfItem)
-    assert.equal(priceOfItem, web3.utils.toWei('46.00', 'ether'), "#1 failed to calculate the item price")
+    assert.equal(priceOfItem, web3.utils.toWei('41.428571428571428571', 'ether'), "#2 failed to calculate the item price")
 
-    result = await merchItem._checkPaymentAbility(numOfItem, { from: admin });
-    assert.ok(result, "the user does not have sufficient tokens")
-    
-    priceOfItem = await merchItem.priceOfItem.call();
-    console.log(priceOfItem)
-    assert.equal(priceOfItem, web3.utils.toWei('43.333333333333333333', 'ether'), "#2 failed to calculate the item price")
+    let totalAmountOfItemSold = await merchItem.totalAmountOfItemSold.call();
+    assert.equal(totalAmountOfItemSold, web3.utils.toWei('139.333333333333333333', 'ether'), "#3 failed to calculate the total amount of item sold")
   });
   // it("purchaseItem() should return true when a user has sufficient funds", async () => {
   //   const result = await merchItem.purchaseItem.call({ from: user1 })

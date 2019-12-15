@@ -134,7 +134,6 @@ contract MerchItem {
   function _calculatePriceOfItem(uint256 itemNum) public returns (uint256) {
     uint256 upper = (startPrice.sub(costOfItem)).mul(2);
     uint256 under = (rateOfDecline.mul(itemNum.sub(1))).add(2000000000000000000);
-    // uint256 result = (upper.div(under).mul(1000000000000000000)).add(costOfItem);
     uint256 result = (_specialDiv(upper, under, 18)).add(costOfItem);
     return result;
   }
