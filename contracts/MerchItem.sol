@@ -56,7 +56,14 @@ contract MerchItem {
   }
 
   function purchaseItem(uint256 numOfItem) public view returns (uint256) {
-    // require(_checkPaymentAbility(), "user does not have sufficient funds");
+    // uint256 totalPayment = _checkPaymentAbility(numOfItem);
+
+    // pay DAI to purchase item(s)
+    // require(_paymentForItem(totalPayment), "payment process faild")
+
+    // update grobal states
+    // require(_updateStates(numOfItem, totalPayment), "failed to update the grobal states");
+
     // require(_mappingPatronToList(), "fail");
     // require(_calculatePortionOfFunds(), "fail");
     // require(_extendAuctionTimeLimit(), "fail");
@@ -113,7 +120,7 @@ contract MerchItem {
     return true;
   }
 
-  function _checkPaymentAbility(uint256 numOfItem) public returns (bool) {
+  function _checkPaymentAbility(uint256 numOfItem) public returns (uint256) {
     uint256 subTotal = 0;
     uint256 totalPayment = 0;
 
@@ -122,13 +129,11 @@ contract MerchItem {
       totalPayment = totalPayment.add(subTotal);
     }
 
-    if (_userHasEnoughFunds(totalPayment)) {
-      itemNumber = itemNumber.add(numOfItem);
-      totalAmountOfItemSold = totalAmountOfItemSold.add(totalPayment);
-      priceOfItem = _calculatePriceOfItem(itemNumber);
-      return true;
-    }
-    return false;
+    // - checks if the payment amount is enough to buy an item  
+    // check if the user's DAI balance is greater than the payment amount
+    require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
+
+    return totalPayment;
   }
 
   function _calculatePriceOfItem(uint256 itemNum) public returns (uint256) {
@@ -137,15 +142,22 @@ contract MerchItem {
     uint256 result = (_specialDiv(upper, under, 18)).add(costOfItem);
     return result;
   }
-  
-  // - checks if the payment amount is enough to buy an item  
-  function _userHasEnoughFunds(uint256 totalPayment) public returns (bool) {
-    // check if the user's DAI balance is greater than the payment amount
-    require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
 
+  function _paymentForItem(uint256 totalPayment) public returns (bool) {
+    token.transfer(this, totalPayment);
+    require(token.balanceOf(this) == totalPayment, "The total payment amount has not been transferred to this contract yet");
     return true;
   }
-  
+
+  function _updateStates(uint256 numOfItem, uint256 totalPayment) public returns (bool) {
+    itemNumber = itemNumber.add(numOfItem);
+    totalAmountOfItemSold = totalAmountOfItemSold.add(totalPayment);
+    priceOfItem = _calculatePriceOfItem(itemNumber);
+    return true;
+  }
+
+  function _paymentProcedure()
+
   // - adds a patron struct to patrons list(mapping)
   function _mappingPatronToList() internal pure returns(bool) {
     // create a new Patron struct and push it to patrons(mapping)
