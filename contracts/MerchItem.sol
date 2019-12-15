@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.5.14;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./Token.sol";
@@ -134,7 +134,8 @@ contract MerchItem {
   function _calculatePriceOfItem(uint256 itemNum) public returns (uint256) {
     uint256 upper = (startPrice.sub(costOfItem)).mul(2);
     uint256 under = (rateOfDecline.mul(itemNum.sub(1))).add(2000000000000000000);
-    uint256 result = (upper.div(under).mul(1000000000000000000)).add(costOfItem);
+    // uint256 result = (upper.div(under).mul(1000000000000000000)).add(costOfItem);
+    uint256 result = (_specialDiv(upper, under, 18)).add(costOfItem);
     return result;
   }
   
@@ -170,5 +171,8 @@ contract MerchItem {
 
   }
 
+    function _specialDiv(uint256 a, uint256 b, uint256 precision) internal view returns (uint256) {
+    return a * (10 ** precision) / b;
+  }
 
 }

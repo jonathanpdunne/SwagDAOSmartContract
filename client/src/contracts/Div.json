@@ -1,0 +1,182 @@
+{
+  "contractName": "Div",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.14+commit.01f1aaa4\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/khiga619/flex/SwagDao/contracts/Div.sol\":\"Div\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/khiga619/flex/SwagDao/contracts/Div.sol\":{\"keccak256\":\"0x236d9f69e5f8830e054bd5b1425457100377ebb087bc7d625fa996a893f1d415\",\"urls\":[\"bzz-raw://291f4657922ce3db9b51da951ba71bd39bba388ada57f8e1a3cd7244c61693a9\",\"dweb:/ipfs/QmUfLrWTE6TXxLZ1nUhfvj6Yv1akDiLJWAy7Ehupzqxdk8\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x640b6dee7a4b830bdfd52b5031a07fc2b12209f5b2e29e5d364a7d37f69d8076\",\"urls\":[\"bzz-raw://31113152e1ddb78fe7a4197f247591ca894e93f916867beb708d8e747b6cc74f\",\"dweb:/ipfs/QmbZaJyXdpsYGykVhHH9qpVGQg9DGCxE2QufbCUy3daTgq\"]}},\"version\":1}",
+  "bytecode": "0x60556023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a72315820f0cfd5d65ca3f931058b4f2d22bb556437963e632201f553df4d7a427385f1d964736f6c634300050e0032",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a72315820f0cfd5d65ca3f931058b4f2d22bb556437963e632201f553df4d7a427385f1d964736f6c634300050e0032",
+  "sourceMap": "87:49:0:-;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
+  "deployedSourceMap": "87:49:0:-;;;;;;;;",
+  "source": "pragma solidity ^0.5.14;\n\nimport \"openzeppelin-solidity/contracts/math/SafeMath.sol\";\n\nlibrary Div {\n  using SafeMath for uint256;\n  \n\n}",
+  "sourcePath": "/Users/khiga619/flex/SwagDao/contracts/Div.sol",
+  "ast": {
+    "absolutePath": "/Users/khiga619/flex/SwagDao/contracts/Div.sol",
+    "exportedSymbols": {
+      "Div": [
+        6
+      ]
+    },
+    "id": 7,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:0"
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "file": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "id": 2,
+        "nodeType": "ImportDirective",
+        "scope": 7,
+        "sourceUnit": 819,
+        "src": "26:59:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 6,
+        "linearizedBaseContracts": [
+          6
+        ],
+        "name": "Div",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 5,
+            "libraryName": {
+              "contractScope": null,
+              "id": 3,
+              "name": "SafeMath",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 818,
+              "src": "109:8:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_SafeMath_$818",
+                "typeString": "library SafeMath"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "103:27:0",
+            "typeName": {
+              "id": 4,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "122:7:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            }
+          }
+        ],
+        "scope": 7,
+        "src": "87:49:0"
+      }
+    ],
+    "src": "0:136:0"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/khiga619/flex/SwagDao/contracts/Div.sol",
+    "exportedSymbols": {
+      "Div": [
+        6
+      ]
+    },
+    "id": 7,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".14"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:0"
+      },
+      {
+        "absolutePath": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "file": "openzeppelin-solidity/contracts/math/SafeMath.sol",
+        "id": 2,
+        "nodeType": "ImportDirective",
+        "scope": 7,
+        "sourceUnit": 819,
+        "src": "26:59:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 6,
+        "linearizedBaseContracts": [
+          6
+        ],
+        "name": "Div",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "id": 5,
+            "libraryName": {
+              "contractScope": null,
+              "id": 3,
+              "name": "SafeMath",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 818,
+              "src": "109:8:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_SafeMath_$818",
+                "typeString": "library SafeMath"
+              }
+            },
+            "nodeType": "UsingForDirective",
+            "src": "103:27:0",
+            "typeName": {
+              "id": 4,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "122:7:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            }
+          }
+        ],
+        "scope": 7,
+        "src": "87:49:0"
+      }
+    ],
+    "src": "0:136:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.14+commit.01f1aaa4.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.16",
+  "updatedAt": "2019-12-15T09:16:18.396Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
