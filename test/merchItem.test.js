@@ -73,13 +73,19 @@ contract("MerchItem", accounts => {
     assert.equal(priceOfItem, web3.utils.toWei('50', 'ether'), "The price of item does not match with the expected value.");
     assert.equal(rateOfDecline, web3.utils.toWei('0.5', 'ether'), "The rate of decline does not match with the expected value.");
   });
+  it("_calculatePriceOfItem", async () => {
+    const itemNum = 2
+    await merchItem._calculatePriceOfItem(itemNum, { from: admin })
+    const priceOfItem = await merchItem.priceOfItem.call()
+    assert.equal(priceOfItem, web3.utils.toWei('50', 'ether'), "the calculation for price of item failed");
+  });
+
   it("_checkPaymentAbility() should return true when a user has a payment ability for a purchase", async () => {
     const numOfItem = 1;
     const result = await merchItem._checkPaymentAbility(numOfItem, { from: admin });
     assert.ok(result, "the user does not have sufficient tokens")
     
     const priceOfItem = await merchItem.priceOfItem.call();
-    console.log(priceOfItem)
     assert.equal(priceOfItem, web3.utils.toWei('46', 'ether'), "failed to calculate the item price")
   });
   // it("purchaseItem() should return true when a user has sufficient funds", async () => {

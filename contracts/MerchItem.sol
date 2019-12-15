@@ -50,7 +50,7 @@ contract MerchItem {
     auctionLimit = 1 weeks;
 
     admin = msg.sender;
-    // Token will be replaced with Dai contract when testing on test networks/mainnet
+    // Token will be replaced with DAI contract when testing on test networks/mainnet
     // DAIContract = Dai(daiAddress);
     token = Token(tokenAddress);
   }
@@ -133,8 +133,8 @@ contract MerchItem {
 
   function _calculatePriceOfItem(uint256 itemNum) public returns (uint256) {
     uint256 upper = (startPrice.sub(costOfItem)).mul(2);
-    uint256 under = (rateOfDecline.mul(itemNum.sub(1))).add(2);
-    uint256 result = (upper.div(under)).add(costOfItem);
+    uint256 under = (rateOfDecline.mul(itemNum.sub(1))).add(2000000000000000000);
+    uint256 result = (upper.div(under).mul(1000000000000000000)).add(costOfItem);
     return result;
   }
   
