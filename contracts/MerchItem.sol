@@ -55,8 +55,9 @@ contract MerchItem {
     token = Token(tokenAddress);
   }
 
-  function purchaseItem(uint256 numOfItem) public view returns (uint256) {
-    // uint256 totalPayment = _checkPaymentAbility(numOfItem);
+  function purchaseItem(uint256 numOfItem) public returns (uint256) {
+    // uint256 totalPayment = _calculateTotalPayment(numOfItem);
+    // require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
 
     // pay DAI to purchase item(s)
     // require(_paymentForItem(totalPayment), "payment process faild")
@@ -120,7 +121,7 @@ contract MerchItem {
     return true;
   }
 
-  function _checkPaymentAbility(uint256 numOfItem) public returns (uint256) {
+  function _calculateTotalPayment(uint256 numOfItem) public returns (uint256) {
     uint256 subTotal = 0;
     uint256 totalPayment = 0;
 
@@ -128,11 +129,6 @@ contract MerchItem {
       subTotal = _calculatePriceOfItem(itemNumber.add(i));
       totalPayment = totalPayment.add(subTotal);
     }
-
-    // - checks if the payment amount is enough to buy an item  
-    // check if the user's DAI balance is greater than the payment amount
-    require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
-
     return totalPayment;
   }
 
@@ -144,8 +140,8 @@ contract MerchItem {
   }
 
   function _paymentForItem(uint256 totalPayment) public returns (bool) {
-    token.transfer(this, totalPayment);
-    require(token.balanceOf(this) == totalPayment, "The total payment amount has not been transferred to this contract yet");
+    token.transfer(address(this), totalPayment);
+    require(token.balanceOf(address(this)) == totalPayment, "The total payment amount has not been transferred to this contract yet");
     return true;
   }
 
@@ -156,7 +152,7 @@ contract MerchItem {
     return true;
   }
 
-  function _paymentProcedure()
+  // function _paymentProcess()
 
   // - adds a patron struct to patrons list(mapping)
   function _mappingPatronToList() internal pure returns(bool) {
