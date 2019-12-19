@@ -55,21 +55,19 @@ contract MerchItem {
     token = Token(tokenAddress);
   }
 
-  function purchaseItem(uint256 numOfItem) public returns (uint256) {
-    // uint256 totalPayment = _calculateTotalPayment(numOfItem);
-    // require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
+  function purchaseItem(uint256 numOfItem) public returns (bool) {
+    uint256 totalPayment = _calculateTotalPayment(numOfItem);
+    require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
 
-    // pay DAI to purchase item(s)
-    // require(_paymentForItem(totalPayment), "payment process faild")
+    require(token.transferFrom(msg.sender, address(this), totalPayment), "Transfer DAI to MerchItem failed");
 
-    // update grobal states
-    // require(_updateStates(numOfItem, totalPayment), "failed to update the grobal states");
+    require(_updateStates(numOfItem, totalPayment), "failed to update the grobal states");
 
     // require(_mappingPatronToList(), "fail");
     // require(_calculatePortionOfFunds(), "fail");
     // require(_extendAuctionTimeLimit(), "fail");
     // require(_transferFundsToCompound(), "fail");
-    // return true;
+    return true;
   }
 
   // Function to send/withdraw funds to a particular address
@@ -151,8 +149,6 @@ contract MerchItem {
     priceOfItem = _calculatePriceOfItem(itemNumber);
     return true;
   }
-
-  // function _paymentProcess()
 
   // - adds a patron struct to patrons list(mapping)
   function _mappingPatronToList() internal pure returns(bool) {

@@ -28,8 +28,9 @@ contract("MerchItem", accounts => {
     admin = accounts[0];
     user1 = accounts[1];
     user2 = accounts[2];
+    merchItemAddress = merchItem.address;
 
-    mintAmount = web3.utils.toWei('1000.00', 'ether')// * oneDAI;
+    mintAmount = web3.utils.toWei('1000', 'ether')// * oneDAI;
     await token.mint(admin, mintAmount);
 
     balanceOfAdmin = await token.balanceOf(admin);
@@ -73,32 +74,45 @@ contract("MerchItem", accounts => {
     assert.equal(priceOfItem, web3.utils.toWei('50.00', 'ether'), "The price of item does not match with the expected value.");
     assert.equal(rateOfDecline, web3.utils.toWei('0.50', 'ether'), "The rate of decline does not match with the expected value.");
   });
-  it("_calculateTotalPayment() should return total payment amount", async () => {
-    let numOfItem = 3;
-    await merchItem._calculateTotalPayment(numOfItem, { from: admin });
-    assert.equal(totalPayment,  web3.utils.toWei('139.333333333333333333', 'ether'), "_calculateTotalPayment() failed")
-  });
-  it('_paymentForItem() should return true when the transfer process succeeded', async () => {
+  // it("_calculateTotalPayment() should return total payment amount", async () => {
+  //   let numOfItem = 3;
+  //   const totalPayment = await merchItem._calculateTotalPayment(numOfItem, { from: admin });
+  //   console.log(totalPayment)
+    // assert.equal(totalPayment,  web3.utils.toWei('139.333333333333333333', 'ether'), "_calculateTotalPayment() failed")
+  // });
+  // it('_paymentForItem() should return true when the transfer process succeeded', async () => {
     
-  });
-  it('_updateStates() should return true when the updating process succeeded', async () => {
-    let numOfItem = 3;
-    await merchItem._updateStates(numOfItem,  web3.utils.toWei('139.333333333333333333', 'ether'))
+  // });
+  // it('_updateStates() should return true when the updating process succeeded', async () => {
+  //   let numOfItem = 3;
+  //   await merchItem._updateStates(numOfItem,  web3.utils.toWei('139.333333333333333333', 'ether'))
 
-    let itemNumber = await merchItem.itemNumber.call();
-    assert.equal(itemNumber, 4, "the item number has not been changed properly")
+  //   let itemNumber = await merchItem.itemNumber.call();
+  //   assert.equal(itemNumber, 4, "the item number has not been changed properly")
   
-    let priceOfItem = await merchItem.priceOfItem.call();
-    assert.equal(priceOfItem, web3.utils.toWei('41.428571428571428571', 'ether'), "#2 failed to calculate the item price")
+  //   let priceOfItem = await merchItem.priceOfItem.call();
+  //   assert.equal(priceOfItem, web3.utils.toWei('41.428571428571428571', 'ether'), "#2 failed to calculate the item price")
   
-    let totalAmountOfItemSold = await merchItem.totalAmountOfItemSold.call();
-    assert.equal(totalAmountOfItemSold, web3.utils.toWei('139.333333333333333333', 'ether'), "#3 failed to calculate the total amount of item sold")
+  //   let totalAmountOfItemSold = await merchItem.totalAmountOfItemSold.call();
+  //   assert.equal(totalAmountOfItemSold, web3.utils.toWei('139.333333333333333333', 'ether'), "#3 failed to calculate the total amount of item sold")
+  // });
+  it("purchaseItem() should return true when a user has sufficient funds", async () => {
+    const numOfItem = 3;
+    balanceOfAdmin = await token.balanceOf(admin);
+    
+    await token.approve(merchItemAddress, balanceOfAdmin, { from: admin })
+    await merchItem.purchaseItem(numOfItem, { from: admin })
+    
+    const itemNumber = await merchItem.itemNumber.call()
+    const totalAmountOfItemSold = await merchItem.totalAmountOfItemSold.call()
+    const priceOfItem = await merchItem.priceOfItem.call()
+    
+    assert.equal(itemNumber, 4, "failed to update the item number")
+    assert.equal(totalAmountOfItemSold, web3.utils.toWei('139.333333333333333333', 'ether'), "failed to update ")
+    assert.equal(priceOfItem, web3.utils.toWei('41.428571428571428571', 'ether'), "failed to update the price of item")
   });
-  // it("purchaseItem() should return true when a user has sufficient funds", async () => {
-  //   const result = await merchItem.purchaseItem.call({ from: user1 })
-  //   assert.ok(result, "user1 does not have sufficient funds")
-  // });
-  // it("purchaseItem() should return false when a user does not have sufficient funds", async () => {
-  //   await truffleAssert.reverts(merchItem.purchaseItem.call({ from: user2 }), "insufficient funds");
-  // });
+  it("purchaseItem() should return false when a user does not have sufficient funds", async () => {
+    const numOfItem = 3;
+    await truffleAssert.reverts(merchItem.purchaseItem(numOfItem, { from: user2 }), "insufficient funds");
+  });
 });
