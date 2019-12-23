@@ -3,11 +3,12 @@ const assert = require('assert');
 const ganache = require('ganache-cli');
 const Web3 = require('web3');
 const web3 = new Web3(ganache.provider());
-const MerchItem = artifacts.require("./MerchItem.sol");
+
 const Token = artifacts.require("./Token.sol");
+const MerchItem = artifacts.require("./MerchItem.sol");
+// const ExposedMerchItem = artifacts.require("./ExposedMerchItem.sol");
 
 contract("MerchItem", accounts => {
-  
   before(async () => {
     token = await Token.new();
     // const oneDAI = 1000000000000000000; //10 ** 18
@@ -24,16 +25,19 @@ contract("MerchItem", accounts => {
       newStartPrice,
       newRateOfPricingDecline,
       token.address
-    );
-    admin = accounts[0];
-    user1 = accounts[1];
-    user2 = accounts[2];
-    merchItemAddress = merchItem.address;
+      );
 
-    mintAmount = web3.utils.toWei('1000', 'ether')// * oneDAI;
-    await token.mint(admin, mintAmount);
+      // eMerchItem = await ExposedMerchItem.new();
 
-    balanceOfAdmin = await token.balanceOf(admin);
+      admin = accounts[0];
+      user1 = accounts[1];
+      user2 = accounts[2];
+      merchItemAddress = merchItem.address;
+      
+      mintAmount = web3.utils.toWei('1000', 'ether')// * oneDAI;
+      await token.mint(admin, mintAmount);
+      
+      balanceOfAdmin = await token.balanceOf(admin);
     balanceOfUser1 = await token.balanceOf(user1);
     balanceOfUser2 = await token.balanceOf(user2);
   });
