@@ -20,33 +20,32 @@ contract MerchItem {
   address public admin;
 
   string public nameOfItem;
-  uint256 public itemNumber;
   uint256 public costOfItem;
+  uint256 public totalSupplyOfItem;
   uint256 public startPrice;
   uint256 public rateOfDecline;
-  uint256 public totalSupplyOfItem;
-  uint256 public priceOfItem;
+  uint256 public itemNumber;
   uint256 public totalAmountOfItemSold; // total amount of funds collected from patrons
+  uint256 public priceOfItem;
   uint256 public auctionLimit;
   mapping(address => Patron) public patrons;
 
   constructor(
-    string memory newItemName,
-    uint256 newItemCost,
-    uint256 newItemTotalSupply,
+    string memory newNameOfItem,
+    uint256 newCostOfItem,
+    uint256 newTotalSupplyOfItem,
     uint256 newStartPrice,
     uint256 newRateOfDecline,
     address tokenAddress
     ) public {
-    nameOfItem = newItemName;
-    itemNumber = 1;
-    costOfItem = newItemCost;
-    totalSupplyOfItem = newItemTotalSupply;
+    nameOfItem = newNameOfItem;
+    costOfItem = newCostOfItem;
+    totalSupplyOfItem = newTotalSupplyOfItem;
     startPrice = newStartPrice;
     rateOfDecline = newRateOfDecline;
+    itemNumber = 1;
     totalAmountOfItemSold = 0;
     priceOfItem = _calculatePriceOfItem(itemNumber);
-
     auctionLimit = 1 weeks;
 
     admin = msg.sender;

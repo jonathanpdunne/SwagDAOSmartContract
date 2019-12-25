@@ -88,17 +88,17 @@ contract TestMerchItem {
     merchItem = new MerchItem(
       "test",
       30 * decimal,
+      30,
       50 * decimal,
-      30 * decimal,
-      5 * decimal,
+      (5 * decimal) / 10,
       address(token)
     );
     eMerchItem = new ExposedMerchItem(
       "test",
       30 * decimal,
+      30,
       50 * decimal,
-      30 * decimal,
-      5 * decimal,
+      (5 * decimal) / 10,
       address(token)
     );
   }
