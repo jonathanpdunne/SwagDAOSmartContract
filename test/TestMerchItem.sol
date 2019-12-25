@@ -106,6 +106,11 @@ contract TestMerchItem {
     bool output = eMerchItem.hasPurchasedItem();
     Assert.equal(output, true, "should be true");
   }
+  function test_calculateTotalPayment() public {
+    uint256 expected = 139333333333333333333;
+    uint256 output = eMerchItem.calculateTotalPayment(3);
+    Assert.equal(output, expected, "should be totally 139.333333333333333333 tokens (139_333_333_333_333_333_333)");
+  }
   function test_calculatePriceOfItem() public {
     uint256 expected = 41428571428571428571;
     uint256 output = eMerchItem.calculatePriceOfItem(4);
