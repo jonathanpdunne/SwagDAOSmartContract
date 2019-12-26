@@ -14,7 +14,6 @@ contract MerchItem {
     address patronAddress;
     uint256 numOfPurchasedItem;
     uint256 portionOfFunds;
-    bool hasDelivered;
   }
 
   address public admin;
@@ -148,12 +147,19 @@ contract MerchItem {
     priceOfItem = _calculatePriceOfItem(itemNumber);
     return true;
   }
-
-  // - adds a patron struct to patrons list(mapping)
-  function _mappingPatronToList() internal pure returns(bool) {
-    // create a new Patron struct and push it to patrons(mapping)
+  function _createPatron(uint256 numOfItem, uint256 totalPayment) internal returns (bool) {
+    patrons[msg.sender] = Patron({
+      patronAddress: msg.sender,
+      numOfPurchasedItem: numOfItem,
+      portionOfFunds: totalPayment
+    }); 
     return true;
-    
+  }
+  function _updatePatron(uint256 numOfItem, uint256 totalPayment) internal returns (bool) {
+    Patron storage p = patrons[msg.sender];
+    p.numOfPurchasedItem = p.numOfPurchasedItem.add(numOfItem);
+    p.portionOfFunds = p.portionOfFunds.add(totalPayment);
+    return true;
   }
 
   function _calculatePortionOfFunds() internal pure returns(bool) {
