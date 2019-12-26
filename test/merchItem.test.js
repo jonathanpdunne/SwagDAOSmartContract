@@ -6,7 +6,7 @@ const web3 = new Web3(ganache.provider());
 
 const Token = artifacts.require("./Token.sol");
 const MerchItem = artifacts.require("./MerchItem.sol");
-// const ExposedMerchItem = artifacts.require("./ExposedMerchItem.sol");
+const ExposedMerchItem = artifacts.require("./ExposedMerchItem.sol");
 
 contract("MerchItem", accounts => {
   before(async () => {
@@ -25,24 +25,20 @@ contract("MerchItem", accounts => {
       newStartPrice,
       newRateOfPricingDecline,
       token.address
-      );
+    );
 
-      // eMerchItem = await ExposedMerchItem.new();
-
-      admin = accounts[0];
-      user1 = accounts[1];
-      user2 = accounts[2];
-      merchItemAddress = merchItem.address;
+    admin = accounts[0];
+    user1 = accounts[1];
+    user2 = accounts[2];
+    merchItemAddress = merchItem.address;
+    
+    mintAmount = web3.utils.toWei('1000', 'ether')// * oneDAI;
+    await token.mint(admin, mintAmount);
       
-      mintAmount = web3.utils.toWei('1000', 'ether')// * oneDAI;
-      await token.mint(admin, mintAmount);
-      
-      balanceOfAdmin = await token.balanceOf(admin);
+    balanceOfAdmin = await token.balanceOf(admin);
     balanceOfUser1 = await token.balanceOf(user1);
     balanceOfUser2 = await token.balanceOf(user2);
   });
-  // beforeEach(async () => {
-  // });
   it("admin has 100 tokens and user1 has 0 tokens", async () => {
     assert.equal(balanceOfAdmin, mintAmount, 'the balance is not 10 tokens')
     assert.equal(balanceOfUser1, 0, 'the balance is not 0 tokens')
@@ -78,28 +74,6 @@ contract("MerchItem", accounts => {
     assert.equal(priceOfItem, web3.utils.toWei('50.00', 'ether'), "The price of item does not match with the expected value.");
     assert.equal(rateOfDecline, web3.utils.toWei('0.50', 'ether'), "The rate of decline does not match with the expected value.");
   });
-  // it("_calculateTotalPayment() should return total payment amount", async () => {
-  //   let numOfItem = 3;
-  //   const totalPayment = await merchItem._calculateTotalPayment(numOfItem, { from: admin });
-  //   console.log(totalPayment)
-    // assert.equal(totalPayment,  web3.utils.toWei('139.333333333333333333', 'ether'), "_calculateTotalPayment() failed")
-  // });
-  // it('_paymentForItem() should return true when the transfer process succeeded', async () => {
-    
-  // });
-  // it('_updateStates() should return true when the updating process succeeded', async () => {
-  //   let numOfItem = 3;
-  //   await merchItem._updateStates(numOfItem,  web3.utils.toWei('139.333333333333333333', 'ether'))
-
-  //   let itemNumber = await merchItem.itemNumber.call();
-  //   assert.equal(itemNumber, 4, "the item number has not been changed properly")
-  
-  //   let priceOfItem = await merchItem.priceOfItem.call();
-  //   assert.equal(priceOfItem, web3.utils.toWei('41.428571428571428571', 'ether'), "#2 failed to calculate the item price")
-  
-  //   let totalAmountOfItemSold = await merchItem.totalAmountOfItemSold.call();
-  //   assert.equal(totalAmountOfItemSold, web3.utils.toWei('139.333333333333333333', 'ether'), "#3 failed to calculate the total amount of item sold")
-  // });
   it("purchaseItem() should return true when a user has sufficient funds", async () => {
     const numOfItem = 3;
     balanceOfAdmin = await token.balanceOf(admin);
@@ -118,5 +92,60 @@ contract("MerchItem", accounts => {
   it("purchaseItem() should return false when a user does not have sufficient funds", async () => {
     const numOfItem = 3;
     await truffleAssert.reverts(merchItem.purchaseItem(numOfItem, { from: user2 }), "insufficient funds");
+  });
+});
+
+contract("ExposedMerchItem", accounts => {
+  before(async () => {
+    token = await Token.new()
+
+    const newItemName = "test";
+    const newItemCost = web3.utils.toWei('30.00', 'ether')// * oneDAI;
+    const newItemTotalSupply = 30// * oneDAI;
+    const newStartPrice = web3.utils.toWei('50.00', 'ether')// * oneDAI;
+    const newRateOfPricingDecline = web3.utils.toWei('0.50', 'ether')// * oneDAI;
+
+    eMerchItem = await ExposedMerchItem.new(
+      newItemName,
+      newItemCost,
+      newItemTotalSupply,
+      newStartPrice,
+      newRateOfPricingDecline,
+      token.address
+    );
+
+    admin = accounts[0];
+    user1 = accounts[1];
+    user2 = accounts[2];
+    eMerchItemAddress = eMerchItem.address;
+    
+    mintAmount = web3.utils.toWei('1000', 'ether')
+    await token.mint(admin, mintAmount)
+
+    balanceOfAdmin = await token.balanceOf(admin)
+    balanceOfUser1 = await token.balanceOf(user1)
+    balanceOfUser2 = await token.balanceOf(user2)
+  })
+  it('_updateStates() should return true when the updating process succeeded', async () => {
+    let numOfItem = 3;
+    let result = await eMerchItem.updateStates(numOfItem,  web3.utils.toWei('139.333333333333333333', 'ether'))
+    assert.ok(result, "should be true")
+
+    let itemNumber = await eMerchItem.itemNumber.call();
+    assert.equal(itemNumber, 4, "the item number has not been changed properly")
+  
+    let priceOfItem = await eMerchItem.priceOfItem.call();
+    assert.equal(priceOfItem, web3.utils.toWei('41.428571428571428571', 'ether'), "#2 failed to calculate the item price")
+  
+    let totalAmountOfItemSold = await eMerchItem.totalAmountOfItemSold.call();
+    assert.equal(totalAmountOfItemSold, web3.utils.toWei('139.333333333333333333', 'ether'), "#3 failed to calculate the total amount of item sold")
+  });
+  it('_paymentForItem() should return true when the transfer process succeeded', async () => {
+    await token.approve(merchItemAddress, balanceOfAdmin, { from: admin })
+    await eMerchItem.paymentForItem(web3.utils.toWei('20.00', 'ether'))
+    let balanceAfterPayment = await token.balanceOf(admin)
+    let balanceOfContract = await token.balanceOf(eMerchItemAddress)
+    assert.equal(balanceAfterPayment, web3.utils.toWei('980', 'ether'), "should be 980 tokens")
+    assert.equal(balanceOfContract, web3.utils.toWei('20', 'ether'), 'should be 20 tokens')
   });
 });

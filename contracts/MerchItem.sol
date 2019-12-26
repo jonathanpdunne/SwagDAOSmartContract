@@ -137,7 +137,7 @@ contract MerchItem {
   }
 
   function _paymentForItem(uint256 totalPayment) internal returns (bool) {
-    token.transfer(address(this), totalPayment);
+    token.transferFrom(msg.sender, address(this), totalPayment);
     require(token.balanceOf(address(this)) == totalPayment, "The total payment amount has not been transferred to this contract yet");
     return true;
   }

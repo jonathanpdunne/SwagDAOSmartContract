@@ -73,7 +73,6 @@ contract ExposedMerchItem is MerchItem {
     function specialDiv(uint256 a, uint256 b, uint256 precision) public pure returns (uint256) {
     return _specialDiv(a, b, precision);
   }
-
 }
 
 contract TestMerchItem {
@@ -116,6 +115,12 @@ contract TestMerchItem {
     uint256 output = eMerchItem.calculatePriceOfItem(4);
     Assert.equal(output, expected, "should be 41.428571428571428571 tokens (41_428_571_428_571_428_571)");
   }
+  // function test_paymentForItem() public {
+  //   token.mint(, 100 * 10 ** 18)
+  //   uint256 totalPayment = eMerchItem.calculateTotalPayment(3);
+  //   bool output = eMerchItem.paymentForItem(totalPayment);
+  //   Assert.equal(output, true, "should be true");
+  // }
   function test_specialDiv() public {
     uint256 expected = 3333333333333333333;
     uint256 output = eMerchItem.specialDiv(10, 3, 18);
