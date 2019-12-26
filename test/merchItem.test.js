@@ -142,9 +142,10 @@ contract("ExposedMerchItem", accounts => {
   });
   it('_paymentForItem() should return true when the transfer process succeeded', async () => {
     await token.approve(merchItemAddress, balanceOfAdmin, { from: admin })
-    await eMerchItem.paymentForItem(web3.utils.toWei('20.00', 'ether'))
+    let result = await eMerchItem.paymentForItem(web3.utils.toWei('20.00', 'ether'))
     let balanceAfterPayment = await token.balanceOf(admin)
     let balanceOfContract = await token.balanceOf(eMerchItemAddress)
+    assert.ok(result, 'should be true')
     assert.equal(balanceAfterPayment, web3.utils.toWei('980', 'ether'), "should be 980 tokens")
     assert.equal(balanceOfContract, web3.utils.toWei('20', 'ether'), 'should be 20 tokens')
   });

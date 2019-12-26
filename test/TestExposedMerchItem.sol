@@ -75,23 +75,14 @@ contract ExposedMerchItem is MerchItem {
   }
 }
 
-contract TestMerchItem {
+contract TestExposedMerchItem {
   using SafeMath for uint256;
   Token token;
-  MerchItem merchItem;
   ExposedMerchItem eMerchItem;
   uint256 decimal = 10 ** 18;
 
   function beforeEach() public {
     token = new Token();
-    merchItem = new MerchItem(
-      "test",
-      30 * decimal,
-      30,
-      50 * decimal,
-      (5 * decimal) / 10,
-      address(token)
-    );
     eMerchItem = new ExposedMerchItem(
       "test",
       30 * decimal,
@@ -115,12 +106,6 @@ contract TestMerchItem {
     uint256 output = eMerchItem.calculatePriceOfItem(4);
     Assert.equal(output, expected, "should be 41.428571428571428571 tokens (41_428_571_428_571_428_571)");
   }
-  // function test_paymentForItem() public {
-  //   token.mint(, 100 * 10 ** 18)
-  //   uint256 totalPayment = eMerchItem.calculateTotalPayment(3);
-  //   bool output = eMerchItem.paymentForItem(totalPayment);
-  //   Assert.equal(output, true, "should be true");
-  // }
   function test_specialDiv() public {
     uint256 expected = 3333333333333333333;
     uint256 output = eMerchItem.specialDiv(10, 3, 18);
