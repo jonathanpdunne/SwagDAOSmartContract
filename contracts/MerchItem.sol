@@ -61,8 +61,7 @@ contract MerchItem {
 
     require(_updateStates(numOfItem, totalPayment), "failed to update the grobal states");
 
-    // require(_mappingPatronToList(), "fail");
-    // require(_calculatePortionOfFunds(), "fail");
+    require(_updatePatron(numOfItem, totalPayment), "fail to update patron info");
     // require(_extendAuctionTimeLimit(), "fail");
     // require(_transferFundsToCompound(), "fail");
     return true;
@@ -163,20 +162,15 @@ contract MerchItem {
     p.portionOfFunds = p.portionOfFunds.add(totalPayment);
     return true;
   }
-
-  function _calculatePortionOfFunds() internal pure returns(bool) {
-    return true;
-
-  }
-
   // - extends an auction adding 24 hours to the time limit
-  function _extendAuctionTimeLimit() internal pure returns(bool) {
+  function _extendAuctionTimeLimit() internal returns (bool) {
+    auctionLimit = auctionLimit.add(24 hours);
     return true;
 
   }
 
   // - deposits the funds collected from patrons to Compound to earn interest until the auction finishes
-  function _transferFundsToCompound() internal pure returns(bool) {
+  function _transferFundsToCompound() internal returns (bool) {
     return true;
 
   }

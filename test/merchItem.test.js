@@ -158,4 +158,13 @@ contract("ExposedMerchItem", accounts => {
     assert.equal(patron.numOfPurchasedItem, 3, 'patron number of purchased item has not been updated properly');
     assert.equal(patron.portionOfFunds, web3.utils.toWei('139.333333333333333333', 'ether'), 'patron portion of funds has not been updated properly');
   })
+  it('_extendAuctionTimeLimit()', async () => {
+    const oneDay = 60 * 60 * 24
+    const oneWeek = oneDay * 7
+    let expected = oneWeek + oneDay
+    let result = await eMerchItem.extendAuctionTimeLimit()
+    let limit = await eMerchItem.auctionLimit.call()
+    assert.ok(result, 'should be true')
+    assert.equal(limit, expected, 'should be same hours')
+  })
 });

@@ -53,19 +53,14 @@ contract ExposedMerchItem is MerchItem {
     
   }
 
-  function calculatePortionOfFunds() public pure returns(bool) {
-    return _calculatePortionOfFunds();
-
-  }
-
   // - extends an auction adding 24 hours to the time limit
-  function extendAuctionTimeLimit() public pure returns(bool) {
+  function extendAuctionTimeLimit() public returns(bool) {
     return _extendAuctionTimeLimit();
 
   }
 
   // - deposits the funds collected from patrons to Compound to earn interest until the auction finishes
-  function transferFundsToCompound() public pure returns(bool) {
+  function transferFundsToCompound() public returns(bool) {
     return _transferFundsToCompound();
 
   }

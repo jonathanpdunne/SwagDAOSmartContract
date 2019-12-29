@@ -33,13 +33,6 @@ contract ExposedMerchItem is MerchItem {
     return _updatePatron();
     
   }
-
-  function calculatePortionOfFunds() public pure returns(bool) {
-    return _calculatePortionOfFunds();
-
-  }
-
-  // - extends an auction adding 24 hours to the time limit
   function extendAuctionTimeLimit() public pure returns(bool) {
     return _extendAuctionTimeLimit();
 
