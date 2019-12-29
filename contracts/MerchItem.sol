@@ -155,8 +155,10 @@ contract MerchItem {
     }); 
     return true;
   }
+
   function _updatePatron(uint256 numOfItem, uint256 totalPayment) internal returns (bool) {
     Patron storage p = patrons[msg.sender];
+    p.patronAddress = msg.sender;
     p.numOfPurchasedItem = p.numOfPurchasedItem.add(numOfItem);
     p.portionOfFunds = p.portionOfFunds.add(totalPayment);
     return true;

@@ -145,8 +145,17 @@ contract("ExposedMerchItem", accounts => {
     let result = await eMerchItem.paymentForItem(web3.utils.toWei('20.00', 'ether'))
     let balanceAfterPayment = await token.balanceOf(admin)
     let balanceOfContract = await token.balanceOf(eMerchItemAddress)
-    assert.ok(result, 'should be true')
+  
+    assert.ok(result, 'should be true');
     assert.equal(balanceAfterPayment, web3.utils.toWei('980', 'ether'), "should be 980 tokens")
     assert.equal(balanceOfContract, web3.utils.toWei('20', 'ether'), 'should be 20 tokens')
   });
+  it('_updatePatron() should return true', async () => {
+    let result = await eMerchItem.updatePatron(3, web3.utils.toWei('139.333333333333333333', 'ether'), { from: user1 })
+    let patron = await eMerchItem.patrons(user1)
+    assert.ok(result, 'should be true') 
+    assert.equal(patron.patronAddress, user1, 'patron address has not been updated properly');
+    assert.equal(patron.numOfPurchasedItem, 3, 'patron number of purchased item has not been updated properly');
+    assert.equal(patron.portionOfFunds, web3.utils.toWei('139.333333333333333333', 'ether'), 'patron portion of funds has not been updated properly');
+  })
 });

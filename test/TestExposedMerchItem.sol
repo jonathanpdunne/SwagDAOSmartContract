@@ -47,9 +47,9 @@ contract ExposedMerchItem is MerchItem {
   }
 
   // - adds a patron struct to patrons list(mapping)
-  function mappingPatronToList() public pure returns(bool) {
+  function updatePatron(uint256 numOfItem, uint256 totalPayment) public returns(bool) {
     // create a new Patron struct and push it to patrons(mapping)
-    return _mappingPatronToList();
+    return _updatePatron(numOfItem, totalPayment);
     
   }
 
