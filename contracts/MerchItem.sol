@@ -20,35 +20,36 @@ contract MerchItem {
   address public admin;
 
   string public nameOfItem;
-  uint256 public itemNumber;
   uint256 public costOfItem;
+  uint256 public totalSupplyOfItem;
   uint256 public startPrice;
   uint256 public rateOfDecline;
-  uint256 public totalSupplyOfItem;
-  uint256 public priceOfItem;
+  uint256 public itemNumber;
   uint256 public totalAmountOfItemSold; // total amount of funds collected from patrons
-  uint256 public auctionLimit;
+  uint256 public priceOfItem;
+  uint256 public auctionTimeLimit;
   mapping(address => Patron) public patrons;
 
   constructor(
-    string memory newItemName,
-    uint256 newItemCost,
-    uint256 newItemTotalSupply,
+    string memory newNameOfItem,
+    uint256 newCostOfItem,
+    uint256 newTotalSupplyOfItem,
     uint256 newStartPrice,
     uint256 newRateOfDecline,
     address tokenAddress
     ) public {
-    nameOfItem = newItemName;
-    itemNumber = 1;
-    costOfItem = newItemCost;
-    totalSupplyOfItem = newItemTotalSupply;
+    nameOfItem = newNameOfItem;
+    costOfItem = newCostOfItem;
+    totalSupplyOfItem = newTotalSupplyOfItem;
     startPrice = newStartPrice;
     rateOfDecline = newRateOfDecline;
+    itemNumber = 1;
     totalAmountOfItemSold = 0;
     priceOfItem = _calculatePriceOfItem(itemNumber);
+    // auctionLimit = now + 1 weeks;
+    auctionTimeLimit = now + 1 minutes;
 
-    auctionLimit = 1 weeks;
-
+    // admin is a person who ups the merch item and started the auction
     admin = msg.sender;
     // Token will be replaced with DAI contract when testing on test networks/mainnet
     // DAIContract = Dai(daiAddress);
@@ -58,14 +59,10 @@ contract MerchItem {
   function purchaseItem(uint256 numOfItem) public returns (bool) {
     uint256 totalPayment = _calculateTotalPayment(numOfItem);
     require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
-
     require(token.transferFrom(msg.sender, address(this), totalPayment), "Transfer DAI to MerchItem failed");
-
     require(_updateStates(numOfItem, totalPayment), "failed to update the grobal states");
-
-    // require(_mappingPatronToList(), "fail");
-    // require(_calculatePortionOfFunds(), "fail");
-    // require(_extendAuctionTimeLimit(), "fail");
+    require(_updatePatron(numOfItem, totalPayment), "fail to update patron info");
+    require(_extendAuctionTimeLimit(), "fail to extend the auction time limit");
     // require(_transferFundsToCompound(), "fail");
     return true;
   }
@@ -77,6 +74,7 @@ contract MerchItem {
   to them, 50% of product sale
    */
   function distributeFundsToPatrons() public pure {
+    // have to check how to transfer funds to maltiple patrons one time
 
   }
 
@@ -87,7 +85,7 @@ contract MerchItem {
   true, only creators/artists can invoke, 40% of product sale
    */
   function claimTotalSellingValue() public pure {
-
+    // 
   }
 
   /**
@@ -138,7 +136,7 @@ contract MerchItem {
   }
 
   function _paymentForItem(uint256 totalPayment) internal returns (bool) {
-    token.transfer(address(this), totalPayment);
+    token.transferFrom(msg.sender, address(this), totalPayment);
     require(token.balanceOf(address(this)) == totalPayment, "The total payment amount has not been transferred to this contract yet");
     return true;
   }
@@ -149,27 +147,32 @@ contract MerchItem {
     priceOfItem = _calculatePriceOfItem(itemNumber);
     return true;
   }
-
-  // - adds a patron struct to patrons list(mapping)
-  function _mappingPatronToList() internal pure returns(bool) {
-    // create a new Patron struct and push it to patrons(mapping)
+  function _createPatron(uint256 numOfItem, uint256 totalPayment) internal returns (bool) {
+    patrons[msg.sender] = Patron({
+      patronAddress: msg.sender,
+      numOfPurchasedItem: numOfItem,
+      portionOfFunds: totalPayment,
+      hasDelivered: false
+    }); 
     return true;
-    
   }
 
-  function _calculatePortionOfFunds() internal pure returns(bool) {
+  function _updatePatron(uint256 numOfItem, uint256 totalPayment) internal returns (bool) {
+    Patron storage p = patrons[msg.sender];
+    p.patronAddress = msg.sender;
+    p.numOfPurchasedItem = p.numOfPurchasedItem.add(numOfItem);
+    p.portionOfFunds = p.portionOfFunds.add(totalPayment);
     return true;
-
   }
-
   // - extends an auction adding 24 hours to the time limit
-  function _extendAuctionTimeLimit() internal pure returns(bool) {
+  function _extendAuctionTimeLimit() internal returns (bool) {
+    auctionTimeLimit = auctionTimeLimit.add(24 hours);
     return true;
 
   }
 
   // - deposits the funds collected from patrons to Compound to earn interest until the auction finishes
-  function _transferFundsToCompound() internal pure returns(bool) {
+  function _transferFundsToCompound() internal returns (bool) {
     return true;
 
   }

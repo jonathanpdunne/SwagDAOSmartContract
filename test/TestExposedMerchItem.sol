@@ -47,25 +47,20 @@ contract ExposedMerchItem is MerchItem {
   }
 
   // - adds a patron struct to patrons list(mapping)
-  function mappingPatronToList() public pure returns(bool) {
+  function updatePatron(uint256 numOfItem, uint256 totalPayment) public returns(bool) {
     // create a new Patron struct and push it to patrons(mapping)
-    return _mappingPatronToList();
+    return _updatePatron(numOfItem, totalPayment);
     
   }
 
-  function calculatePortionOfFunds() public pure returns(bool) {
-    return _calculatePortionOfFunds();
-
-  }
-
   // - extends an auction adding 24 hours to the time limit
-  function extendAuctionTimeLimit() public pure returns(bool) {
+  function extendAuctionTimeLimit() public returns(bool) {
     return _extendAuctionTimeLimit();
 
   }
 
   // - deposits the funds collected from patrons to Compound to earn interest until the auction finishes
-  function transferFundsToCompound() public pure returns(bool) {
+  function transferFundsToCompound() public returns(bool) {
     return _transferFundsToCompound();
 
   }
@@ -73,38 +68,33 @@ contract ExposedMerchItem is MerchItem {
     function specialDiv(uint256 a, uint256 b, uint256 precision) public pure returns (uint256) {
     return _specialDiv(a, b, precision);
   }
-
 }
 
-contract TestMerchItem {
+contract TestExposedMerchItem {
   using SafeMath for uint256;
   Token token;
-  MerchItem merchItem;
   ExposedMerchItem eMerchItem;
   uint256 decimal = 10 ** 18;
 
   function beforeEach() public {
     token = new Token();
-    merchItem = new MerchItem(
-      "test",
-      30 * decimal,
-      50 * decimal,
-      30 * decimal,
-      5 * decimal,
-      address(token)
-    );
     eMerchItem = new ExposedMerchItem(
       "test",
       30 * decimal,
+      30,
       50 * decimal,
-      30 * decimal,
-      5 * decimal,
+      (5 * decimal) / 10,
       address(token)
     );
   }
   function test_hasPurchasedItem() public {
     bool output = eMerchItem.hasPurchasedItem();
     Assert.equal(output, true, "should be true");
+  }
+  function test_calculateTotalPayment() public {
+    uint256 expected = 139333333333333333333;
+    uint256 output = eMerchItem.calculateTotalPayment(3);
+    Assert.equal(output, expected, "should be totally 139.333333333333333333 tokens (139_333_333_333_333_333_333)");
   }
   function test_calculatePriceOfItem() public {
     uint256 expected = 41428571428571428571;
