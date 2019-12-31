@@ -14,6 +14,7 @@ contract MerchItem {
     address patronAddress;
     uint256 numOfPurchasedItem;
     uint256 portionOfFunds;
+    bool hasDelivered;
   }
 
   address public admin;
@@ -26,7 +27,7 @@ contract MerchItem {
   uint256 public itemNumber;
   uint256 public totalAmountOfItemSold; // total amount of funds collected from patrons
   uint256 public priceOfItem;
-  uint256 public auctionLimit;
+  uint256 public auctionTimeLimit;
   mapping(address => Patron) public patrons;
 
   constructor(
@@ -45,8 +46,10 @@ contract MerchItem {
     itemNumber = 1;
     totalAmountOfItemSold = 0;
     priceOfItem = _calculatePriceOfItem(itemNumber);
-    auctionLimit = 1 weeks;
+    // auctionLimit = now + 1 weeks;
+    auctionTimeLimit = now + 1 minutes;
 
+    // admin is a person who ups the merch item and started the auction
     admin = msg.sender;
     // Token will be replaced with DAI contract when testing on test networks/mainnet
     // DAIContract = Dai(daiAddress);
@@ -56,13 +59,10 @@ contract MerchItem {
   function purchaseItem(uint256 numOfItem) public returns (bool) {
     uint256 totalPayment = _calculateTotalPayment(numOfItem);
     require(token.balanceOf(msg.sender) >= totalPayment, "insufficient funds");
-
     require(token.transferFrom(msg.sender, address(this), totalPayment), "Transfer DAI to MerchItem failed");
-
     require(_updateStates(numOfItem, totalPayment), "failed to update the grobal states");
-
     require(_updatePatron(numOfItem, totalPayment), "fail to update patron info");
-    // require(_extendAuctionTimeLimit(), "fail");
+    require(_extendAuctionTimeLimit(), "fail to extend the auction time limit");
     // require(_transferFundsToCompound(), "fail");
     return true;
   }
@@ -74,6 +74,7 @@ contract MerchItem {
   to them, 50% of product sale
    */
   function distributeFundsToPatrons() public pure {
+    // have to check how to transfer funds to maltiple patrons one time
 
   }
 
@@ -84,7 +85,7 @@ contract MerchItem {
   true, only creators/artists can invoke, 40% of product sale
    */
   function claimTotalSellingValue() public pure {
-
+    // 
   }
 
   /**
@@ -150,7 +151,8 @@ contract MerchItem {
     patrons[msg.sender] = Patron({
       patronAddress: msg.sender,
       numOfPurchasedItem: numOfItem,
-      portionOfFunds: totalPayment
+      portionOfFunds: totalPayment,
+      hasDelivered: false
     }); 
     return true;
   }
@@ -164,7 +166,7 @@ contract MerchItem {
   }
   // - extends an auction adding 24 hours to the time limit
   function _extendAuctionTimeLimit() internal returns (bool) {
-    auctionLimit = auctionLimit.add(24 hours);
+    auctionTimeLimit = auctionTimeLimit.add(24 hours);
     return true;
 
   }

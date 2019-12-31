@@ -39,7 +39,7 @@ contract ExposedMerchItem is MerchItem {
   }
 
   // - deposits the funds collected from patrons to Compound to earn interest until the auction finishes
-  function transferFundsToCompound() public pure returns(bool) {
+  function transferFundsToCompound() public returns(bool) {
     return _transferFundsToCompound();
 
   }
